@@ -1,5 +1,3 @@
-Voici une description Git complète pour un projet "FastFoodBike" :
-
 # FastFoodBike 🚴‍♂️🍔
 
 ## Description
