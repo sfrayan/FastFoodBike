@@ -1,1 +1,2 @@
 Menu FastFoodBike
+Ajout d’un burger vegan
