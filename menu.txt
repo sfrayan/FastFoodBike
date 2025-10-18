@@ -1,2 +1,3 @@
 Menu FastFoodBike
 Ajout d’un burger vegan
+Ajout d’un dessert maison
