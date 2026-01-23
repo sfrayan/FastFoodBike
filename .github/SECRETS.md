@@ -1,173 +1,257 @@
-# 🔐 Configuration des Secrets GitHub
+# 🔐 GitHub Secrets Configuration
 
-Ce document explique comment configurer les secrets nécessaires pour le CI/CD et le déploiement.
+Guide complet pour configurer tous les secrets nécessaires pour le CI/CD.
 
-## Accès aux secrets
+## ⚙️ Aller à
 
-1. Allez sur **Settings** > **Secrets and variables** > **Actions**
-2. Cliquez sur **New repository secret**
-3. Ajoutez chaque secret avec son nom et sa valeur
+Settings > Secrets and variables > Actions > New repository secret
 
-## Secrets obligatoires
+## 📋 Secrets obligatoires
 
-### 1. **HEROKU_API_KEY**
-- Description: Clé API Heroku pour le déploiement
-- Où l'obtenir: [Account Settings Heroku](https://dashboard.heroku.com/account/applications/authorizations)
-- Format: `long-alphanumeric-string`
+### 1. Heroku (Backend Deployment)
 
-### 2. **HEROKU_EMAIL**
-- Description: Email associé au compte Heroku
-- Format: `your-email@example.com`
-
-### 3. **HEROKU_APP_NAME**
-- Description: Nom de votre application Heroku
-- Format: `fastfoodbike-api` ou similaire
-
-### 4. **VERCEL_TOKEN**
-- Description: Token d'authentification Vercel
-- Où l'obtenir: [Vercel Account Settings](https://vercel.com/account/tokens)
-- Format: Long token
-
-### 5. **VERCEL_ORG_ID**
-- Description: ID d'organisation Vercel
-- Où l'obtenir: Affiché dans l'URL ou accès Vercel
-- Format: `team_xxxxx` ou ID numérique
-
-### 6. **VERCEL_PROJECT_ID**
-- Description: ID du projet Vercel
-- Où l'obtenir: Affiché dans les paramètres du projet
-- Format: `prj_xxxxx` ou ID numérique
-
-### 7. **SLACK_WEBHOOK_URL**
-- Description: URL du webhook Slack pour les notifications
-- Où l'obtenir: [Slack API](https://api.slack.com/messaging/webhooks)
-- Format: `https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXX`
-
-### 8. **SNYK_TOKEN**
-- Description: Token Snyk pour la scécurisation
-- Où l'obtenir: [Snyk Account Settings](https://app.snyk.io/account/settings)
-- Format: Long token
-
-### 9. **PRODUCTION_API_URL**
-- Description: URL de l'API en production
-- Format: `https://api.fastfoodbike.com` ou URL de votre serveur
-
-### 10. **REGISTRY**
-- Description: URL du registre Docker (si utilisé)
-- Format: `ghcr.io`, `docker.io`, ou registre privé
-- Optionnel: Only if using Docker image registry
-
-## Variables d'environnement sensêbles
-
-### Backend (.env)
-Assurez-vous que ces variables sont définies :
-
-```env
-# Authentication
-JWT_SECRET=your_super_secret_key_minimum_32_chars
-JWT_EXPIRES_IN=7d
-
-# Database
-DATABASE_URL=mongodb://user:password@host/database
-# ou
-DATABASE_URL=postgresql://user:password@host/database
-
-# Payment (Stripe)
-STRIPE_SECRET_KEY=sk_live_...
-STRIPE_PUBLIC_KEY=pk_live_...
-STRIPE_WEBHOOK_SECRET=whsec_...
-
-# Email
-SMTP_USER=your-email@gmail.com
-SMTP_PASS=app-specific-password
-
-# Maps
-MAPS_API_KEY=your_google_maps_api_key
-
-# Redis
-REDIS_URL=redis://:password@host:6379/0
-
-# RabbitMQ
-RABBITMQ_URL=amqp://user:password@host:5672
+```
+HEROKU_API_KEY
+  Description: Clé API Heroku
+  Valeur: Depuis https://dashboard.heroku.com/account/applications/authorizations
+  
+HEROKU_EMAIL
+  Description: Email du compte Heroku
+  Valeur: your-email@example.com
+  
+HEROKU_APP_NAME
+  Description: Nom de l'app Heroku
+  Valeur: fastfoodbike-api (ou votre nom)
 ```
 
-### Frontend (.env.production)
+### 2. Vercel (Frontend Deployment)
 
-```env
-REACT_APP_API_URL=https://api.fastfoodbike.com
-REACT_APP_STRIPE_PUBLIC_KEY=pk_live_...
-REACT_APP_MAPS_API_KEY=your_maps_api_key
+```
+VERCEL_TOKEN
+  Description: Token d'authentification Vercel
+  Valeur: Depuis https://vercel.com/account/tokens
+  
+VERCEL_ORG_ID
+  Description: Organisation ID (si organisation, sinon user ID)
+  Valeur: Depuis les paramètres du compte
+  
+VERCEL_PROJECT_ID
+  Description: ID du projet Vercel
+  Valeur: À créer et récupérer via CLI ou dashboard
 ```
 
-## Exemple de configuration complète
+### 3. Database & Services
 
-### Pas 1 : Créer les secrets
-
-```bash
-# Via GitHub CLI
-gh secret set HEROKU_API_KEY --body "your_api_key"
-gh secret set HEROKU_EMAIL --body "your-email@example.com"
-gh secret set HEROKU_APP_NAME --body "fastfoodbike-api"
-gh secret set VERCEL_TOKEN --body "your_vercel_token"
-gh secret set VERCEL_ORG_ID --body "team_xxxxx"
-gh secret set VERCEL_PROJECT_ID --body "prj_xxxxx"
-gh secret set SLACK_WEBHOOK_URL --body "https://hooks.slack.com/..."
-gh secret set SNYK_TOKEN --body "your_snyk_token"
-gh secret set PRODUCTION_API_URL --body "https://api.fastfoodbike.com"
+```
+MONGODB_URI
+  Description: MongoDB Atlas connection string
+  Valeur: mongodb+srv://user:pass@cluster.mongodb.net/fastfoodbike
+  
+REDIS_URL
+  Description: Redis Cloud connection URL
+  Valeur: redis://:password@host:port
+  
+RABBITMQ_URL
+  Description: CloudAMQP connection URL
+  Valeur: amqp://user:pass@host/vhost
 ```
 
-### Pas 2 : Vérifier les secrets
+### 4. Paiement & Services externes
 
-```bash
-gh secret list
+```
+STRIPE_SECRET_KEY
+  Description: Clé secrète Stripe
+  Valeur: sk_live_... (production) ou sk_test_... (test)
+  
+STRIPE_PUBLIC_KEY
+  Description: Clé publique Stripe
+  Valeur: pk_live_... (production) ou pk_test_... (test)
+  
+STRIPE_WEBHOOK_SECRET
+  Description: Secret pour webhooks Stripe
+  Valeur: whsec_... (généré dans Stripe dashboard)
 ```
 
-## Sécurité
+### 5. Services externes (Email, SMS, etc.)
 
-### 🔐 Bonnes pratiques
+```
+SMTP_HOST
+  Description: Serveur SMTP
+  Valeur: smtp.gmail.com ou autre
+  
+SMTP_USER
+  Description: Email SMTP
+  Valeur: your-email@gmail.com
+  
+SMTP_PASS
+  Description: Mot de passe SMTP (App Password pour Gmail)
+  Valeur: votre-app-password
+  
+SMTP_FROM
+  Description: Email "from"
+  Valeur: noreply@fastfoodbike.com
+```
 
-1. **Ne jamais commiter les secrets**
-   - Utilisez `.gitignore` pour `.env` fichiers
-   - Vérifiez les secrets dans le code avant commit
+### 6. Google Maps & Geolocation
 
-2. **Rotation régulière**
-   - Changez les clés tous les 3 mois
-   - Marquez les anciennes clés comme "revokées"
+```
+GOOGLE_MAPS_API_KEY
+  Description: Google Maps API key
+  Valeur: Depuis Google Cloud Console
+```
 
-3. **Permissions minimales**
-   - Créez des tokens avec les permissions nécessaires seulement
-   - Utilisez des roles spécifiques pour le déploiement
+### 7. Monitoring & Logging
 
-4. **Monitoring**
-   - Vérifiez régulièrement l'accès aux secrets
-   - Activez les logs d'audit
+```
+SENTRY_DSN
+  Description: Sentry DSN pour error tracking
+  Valeur: https://key@sentry.io/project
+  
+DATADOG_API_KEY
+  Description: Clé API DataDog
+  Valeur: Depuis DataDog dashboard
+```
 
-## Troubleshooting
+### 8. CI/CD & Notifications
 
-### ❌ "Secret not found"
-- Vérifiez le nom exact (case-sensitive)
-- Vérifiez que le secret a été sauvegardé
+```
+SLACK_WEBHOOK_URL
+  Description: Slack incoming webhook pour notifications
+  Valeur: https://hooks.slack.com/services/...
+  
+DISCORD_WEBHOOK_URL
+  Description: Discord webhook pour notifications
+  Valeur: https://discord.com/api/webhooks/...
+  
+GHUB_TOKEN
+  Description: GitHub token avec accès aux secrets
+  Valeur: Généré depuis GitHub Developer settings
+```
 
-### ❌ "Unauthorized" lors du déploiement
-- Vérifiez que le token est valide
-- Vérifiez les permissions du token
-- Régénérez le token si nécessaire
+### 9. Sécurité & Scanning
 
-### ❌ Webhook Slack ne fonctionne pas
-- Vérifiez l'URL du webhook
-- Vérifiez que le canal Slack existe
-- Vérifiez les permissions du bot
+```
+SNYK_TOKEN
+  Description: Snyk token pour vulnerability scanning
+  Valeur: Depuis https://app.snyk.io/account/settings/api
+  
+SODEPENDENT_TOKEN
+  Description: Dependabot token (optionnel)
+  Valeur: Généré automatiquement par GitHub
+```
 
-## Outils utiles
+### 10. JWT & Authentification
 
-- [GitHub CLI](https://cli.github.com/) - Manage secrets from terminal
-- [Vercel CLI](https://vercel.com/cli) - Deploy to Vercel
-- [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) - Deploy to Heroku
-- [1Password](https://1password.com/) - Secure secret management
-- [HashiCorp Vault](https://www.vaultproject.io/) - Enterprise secret management
+```
+JWT_SECRET
+  Description: Secret JWT pour le backend
+  Valeur: Longue chaîne aléatoire (min 32 chars)
+  Exemple: crypto.randomBytes(32).toString('hex')
+  
+JWT_REFRESH_SECRET
+  Description: Secret pour refresh tokens
+  Valeur: Longue chaîne aléatoire (min 32 chars)
+```
 
-## Ressources
+## 🖣️ Checklist
+
+- [ ] Heroku API Key
+- [ ] Heroku Email
+- [ ] Heroku App Name
+- [ ] Vercel Token
+- [ ] Vercel Org ID
+- [ ] Vercel Project ID
+- [ ] MongoDB URI
+- [ ] Redis URL
+- [ ] RabbitMQ URL
+- [ ] Stripe Secret Key
+- [ ] Stripe Public Key
+- [ ] Stripe Webhook Secret
+- [ ] SMTP Host
+- [ ] SMTP User
+- [ ] SMTP Pass
+- [ ] SMTP From
+- [ ] Google Maps API Key
+- [ ] Sentry DSN
+- [ ] DataDog API Key
+- [ ] Slack Webhook
+- [ ] Discord Webhook
+- [ ] Snyk Token
+- [ ] JWT Secret
+- [ ] JWT Refresh Secret
+
+## 💡 Bonnes pratiques
+
+### Sécurité
+- ⚠️ **JAMAIS** commiter les secrets dans le code
+- ⚠️ Utiliser UNIQUEMENT les GitHub Secrets
+- ⚠️ Rotation régulière des clés
+- ⚠️ Secrets séparés pour dev/staging/prod
+- ⚠️ Audit des accès aux secrets
+
+### Nommage
+- PrefixerPar l'env : `PROD_`, `STAGING_`, etc.
+- CamelCase : `HEROKU_API_KEY` (pas `heroku_api_key`)
+- Descriptif : `STRIPE_WEBHOOK_SECRET` (pas `KEY1`)
+
+### Rotation
+```
+# Chaque secret doit être changé tous les 90 jours
+# Ou immédiatement si compromis détecté
+
+# Pour les tokens : implémenter une expiration
+# Pour les clés : générer de nouvelles clés régulièrement
+```
+
+## 🚀 Utilisation dans les Workflows
+
+### Backend
+```yaml
+env:
+  NODE_ENV: production
+  DATABASE_URL: ${{ secrets.MONGODB_URI }}
+  JWT_SECRET: ${{ secrets.JWT_SECRET }}
+  STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+```
+
+### Frontend
+```yaml
+env:
+  VITE_STRIPE_PUBLIC_KEY: ${{ secrets.STRIPE_PUBLIC_KEY }}
+  VITE_API_URL: https://api.fastfoodbike.com
+```
+
+### Heroku Deploy
+```yaml
+env:
+  HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+  HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
+  HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+```
+
+### Vercel Deploy
+```yaml
+env:
+  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+```
+
+## 📚 Documentation externe
 
 - [GitHub Secrets Documentation](https://docs.github.com/en/actions/security-guides/encrypted-secrets)
-- [Best Practices for Secrets](https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html)
-- [OWASP Secrets Management](https://cheatsheetseries.owasp.org/)
+- [Heroku API Keys](https://devcenter.heroku.com/articles/platform-api-quickstart)
+- [Vercel Tokens](https://vercel.com/account/tokens)
+- [Stripe API Keys](https://stripe.com/docs/keys)
+- [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+
+## 📧 Support
+
+Si vous avez des questions :
+- 📖 Lire [docs/DEPLOYMENT.md](../docs/DEPLOYMENT.md)
+- 🐛 Créer une issue GitHub
+- 💬 GitHub Discussions
+
+---
+
+**Une fois configuré, les workflows CI/CD tourneront automatiquement !** 🚀
