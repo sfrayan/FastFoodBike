@@ -1,0 +1,69 @@
+{
+  "name": "fastfoodbike-backend",
+  "version": "1.0.0",
+  "description": "FastFoodBike API - Food delivery on bikes",
+  "main": "src/index.js",
+  "type": "module",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=7.0.0"
+  },
+  "scripts": {
+    "dev": "nodemon --exec node --experimental-modules src/index.js",
+    "start": "node src/index.js",
+    "test": "NODE_ENV=test mocha --require @babel/register --exit --timeout 5000",
+    "test:coverage": "nyc npm test",
+    "test:watch": "mocha --require @babel/register --watch",
+    "lint": "eslint src --max-warnings 0",
+    "lint:fix": "eslint src --fix",
+    "format": "prettier --write \"src/**/*.js\"",
+    "db:seed": "node src/scripts/seed.js",
+    "db:migrate": "node src/scripts/migrate.js"
+  },
+  "keywords": [
+    "fastfoodbike",
+    "delivery",
+    "api",
+    "express"
+  ],
+  "author": "Sfrayan",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-async-errors": "^3.1.1",
+    "express-validator": "^7.0.0",
+    "helmet": "^7.1.0",
+    "joi": "^17.11.0",
+    "jsonwebtoken": "^9.1.2",
+    "mongoose": "^8.0.0",
+    "socket.io": "^4.7.2",
+    "stripe": "^14.7.0",
+    "redis": "^4.6.12",
+    "amqplib": "^0.10.3",
+    "nodemailer": "^6.9.7",
+    "axios": "^1.6.2",
+    "uuid": "^9.0.1",
+    "winston": "^3.11.0",
+    "express-rate-limit": "^7.1.5"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.23.5",
+    "@babel/preset-env": "^7.23.5",
+    "@babel/register": "^7.23.3",
+    "@faker-js/faker": "^8.3.1",
+    "chai": "^4.3.10",
+    "eslint": "^8.55.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "mocha": "^10.2.0",
+    "mongodb-memory-server": "^9.1.6",
+    "nodemon": "^3.0.2",
+    "nyc": "^15.1.0",
+    "prettier": "^3.1.1",
+    "sinon": "^17.0.1",
+    "supertest": "^6.3.3"
+  }
+}
