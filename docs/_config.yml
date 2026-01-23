@@ -1,0 +1,56 @@
+# FastFoodBike GitHub Pages Configuration
+
+theme: jekyll-theme-minimal
+title: FastFoodBike
+description: A modern food delivery platform on bikes
+show_downloads: false
+
+# Site settings
+url: https://sfrayan.github.io/FastFoodBike
+baseurl: /FastFoodBike
+
+# Author
+author:
+  name: Sfrayan
+  github: sfrayan
+
+# Navigation
+navigation:
+  - title: Home
+    url: /
+  - title: Setup
+    url: /SETUP
+  - title: API
+    url: /API
+  - title: Contributing
+    url: /CONTRIBUTING
+  - title: GitHub
+    url: https://github.com/sfrayan/FastFoodBike
+
+# Build settings
+markdown: kramdown
+plugins:
+  - jekyll-sitemap
+  - jekyll-feed
+  - jekyll-seo-tag
+
+exclude:
+  - .gitignore
+  - .github
+  - node_modules
+  - Gemfile
+  - Gemfile.lock
+  - .DS_Store
+
+# Kramdown
+kramdown:
+  syntax_highlighter: rouge
+  input: GFM
+
+# SEO
+social:
+  links:
+    - https://github.com/sfrayan/FastFoodBike
+
+# Locale
+lang: fr
