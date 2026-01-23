@@ -1,56 +1,70 @@
-# FastFoodBike GitHub Pages Configuration
-
-theme: jekyll-theme-minimal
-title: FastFoodBike
-description: A modern food delivery platform on bikes
-show_downloads: false
-
 # Site settings
-url: https://sfrayan.github.io/FastFoodBike
-baseurl: /FastFoodBike
+title: "FastFoodBike Documentation"
+description: "Modern food delivery by bike platform - Complete documentation"
+url: "https://sfrayan.github.io"
+baseurl: "/FastFoodBike"
+repository: "sfrayan/FastFoodBike"
+
+# GitHub Pages theme
+theme: jekyll-theme-cayman
 
 # Author
-author:
-  name: Sfrayan
-  github: sfrayan
-
-# Navigation
-navigation:
-  - title: Home
-    url: /
-  - title: Setup
-    url: /SETUP
-  - title: API
-    url: /API
-  - title: Contributing
-    url: /CONTRIBUTING
-  - title: GitHub
-    url: https://github.com/sfrayan/FastFoodBike
+author: "Safouane Frayan"
+email: "154235153+sfrayan@users.noreply.github.com"
 
 # Build settings
 markdown: kramdown
+include: ["_pages"]
+exclude: [
+  'README.md',
+  'LICENSE',
+  'Gemfile',
+  'Gemfile.lock',
+  '.gitignore'
+]
+
+# Timezone
+timezone: 'Europe/Paris'
+
+# Plugins
 plugins:
-  - jekyll-sitemap
-  - jekyll-feed
   - jekyll-seo-tag
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-gist
+  - jekyll-relative-links
+  - jekyll-redirect-from
 
-exclude:
-  - .gitignore
-  - .github
-  - node_modules
-  - Gemfile
-  - Gemfile.lock
-  - .DS_Store
+# Compress CSS/JS
+sass:
+  style: compressed
 
-# Kramdown
-kramdown:
-  syntax_highlighter: rouge
-  input: GFM
+# Collections
+collections:
+  guides:
+    output: true
+    permalink: /guides/:path/
 
-# SEO
+# Front matter defaults
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
+  - scope:
+      path: ""
+      type: "guides"
+    values:
+      layout: "default"
+
+# Social media
 social:
-  links:
-    - https://github.com/sfrayan/FastFoodBike
+  github: sfrayan
+  twitter: fastfoodbike
 
-# Locale
-lang: fr
+# Analytics (optional)
+google_analytics: "UA-XXXXXXXXX-X"
+
+# Show descriptions for pages
+show_downloads: false
