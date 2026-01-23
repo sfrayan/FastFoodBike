@@ -1,0 +1,135 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:5.0-alpine
+    container_name: fastfoodbike-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: fastfoodbike
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    networks:
+      - fastfoodbike-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command:
+      - --auth
+      - --replSet
+      - rs0
+
+  # PostgreSQL Database (Alternative)
+  postgres:
+    image: postgres:14-alpine
+    container_name: fastfoodbike-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: fastfood
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: fastfoodbike
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - fastfoodbike-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U fastfood -d fastfoodbike" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    profiles:
+      - postgres
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: fastfoodbike-redis
+    ports:
+      - "6379:6379"
+    environment:
+      REDIS_PASSWORD: redispassword
+    volumes:
+      - redis_data:/data
+    networks:
+      - fastfoodbike-network
+    command: redis-server --requirepass redispassword
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # RabbitMQ Message Queue
+  rabbitmq:
+    image: rabbitmq:3.12-management-alpine
+    container_name: fastfoodbike-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - fastfoodbike-network
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API (optional - uncomment to use with docker)
+  # backend:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   container_name: fastfoodbike-api
+  #   ports:
+  #     - "5000:5000"
+  #   environment:
+  #     NODE_ENV: development
+  #     DATABASE_URL: mongodb://admin:password@mongodb:27017/fastfoodbike?authSource=admin
+  #     REDIS_URL: redis://:redispassword@redis:6379/0
+  #     RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+  #   depends_on:
+  #     mongodb:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #     rabbitmq:
+  #       condition: service_healthy
+  #   networks:
+  #     - fastfoodbike-network
+  #   volumes:
+  #     - ./backend:/app
+  #     - /app/node_modules
+
+  # Mailhog for email testing
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: fastfoodbike-mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - fastfoodbike-network
+
+volumes:
+  mongodb_data:
+  mongodb_config:
+  postgres_data:
+  redis_data:
+  rabbitmq_data:
+
+networks:
+  fastfoodbike-network:
+    driver: bridge
