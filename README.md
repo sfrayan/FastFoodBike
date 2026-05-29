@@ -1,10 +1,12 @@
 # 🍔 FastFoodBike - Plateforme de Livraison
 
-[![Status](https://img.shields.io/badge/Status-Production%20Ready-green)](/)
-[![Version](https://img.shields.io/badge/Version-1.0.0-blue)](/)
+[![Status](https://img.shields.io/badge/Status-Educational%20Project-blue)](/)
+[![Stack](https://img.shields.io/badge/Stack-MERN-green)](/)
 [![License](https://img.shields.io/badge/License-MIT-yellow)](/)
 
-**Application complète de livraison de nourriture avec paiements Stripe/Razorpay, notifications email et SMS.**
+**Application full-stack de livraison de nourriture (projet d'apprentissage) : API Node/Express + MongoDB, frontend React, intégration paiements Stripe/Razorpay (mode test) et notifications email/SMS.**
+
+> ⚠️ Projet éducatif, configuré en mode **test** (clés Stripe/Razorpay de test). Non destiné à un usage en production tel quel.
 
 ---
 
@@ -62,10 +64,10 @@ FastFoodBike est une plateforme complète de livraison de nourriture comprenant 
 - Campagnes promo
 
 ### 🔒 Sécurité
-- PCI DSS compliant
 - JWT Authentication
-- Chiffrement des données
+- Hash des mots de passe (bcrypt)
 - Validation des entrées
+- Paiements délégués aux SDK Stripe/Razorpay (aucune donnée carte stockée)
 
 ---
 
@@ -569,13 +571,10 @@ FRONTEND_URL=https://votre-domaine.com
 
 | Métrique | Valeur |
 |----------|--------|
-| **Fichiers créés** | 19 |
-| **Lignes de code** | 20,000+ |
-| **API Endpoints** | 37 |
-| **Pages Frontend** | 6 |
-| **Templates Email** | 8 |
-| **Templates SMS** | 9 |
-| **Temps de réponse API** | < 500ms |
+| **Lignes de code** | ~6 200 |
+| **Controllers backend** | 6 (Auth, User, Restaurant, MenuItem, Order, Payment) |
+| **Pages Frontend** | ~10 |
+| **Services** | paiement (Stripe/Razorpay), email, SMS |
 
 ---
 
